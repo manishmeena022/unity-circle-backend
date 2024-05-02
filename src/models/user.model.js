@@ -1,9 +1,9 @@
 import mongoose,{Schema} from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import multer from "multer";
-import { upload } from "../middlewares/multer.middleware";
-const AVATAR_PATH = path.join("/public/uploads/users/avatars");
+//import { upload } from "../middlewares/multer.middleware.js";
+// import path from "path";
+// const AVATAR_PATH = path.join("/public/uploads/users/avatars");
 
 const userSchema = new Schema({
     username : {
@@ -84,8 +84,8 @@ userSchema.methods.generateAccessToken = function(){
     })
 }
 
-userSchema.statics.uploadedAvatar = upload.single("avatar");
+// userSchema.statics.uploadedAvatar = upload.single("avatar");
 
-userSchema.statics.avatarPath = AVATAR_PATH;
+// userSchema.statics.avatarPath = AVATAR_PATH;
 
 export const User = mongoose.model("User", userSchema);

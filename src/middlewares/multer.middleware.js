@@ -1,4 +1,5 @@
 import multer from "multer";
+import path from "path";
 const AVATAR_PATH = path.join("/public/uploads/users/avatars");
 
 
