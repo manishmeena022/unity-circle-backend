@@ -12,54 +12,99 @@ const userSchema = new Schema({
         unqiue : true,
         lowercase : true,
         trim : true,
-        index : true
     },
     fullName : {
         type : String,
         required : true,
         trim : true,
-        index : true,
     },
     email : {
         type : String,
         required : true,
         unique : true,
-        lowercase : true,
-        trim : true,
-    },
-    avatar : {
-        type : String,
-        required : true,
+        // match : /^\S+@\S+\. \S+$/,
     },
     password : {
         type : String,
         required : true,
     },
-    friendships : [
-        {
-            type : Schema.Types.ObjectId,
-            ref : "Fiendship",
-        }
-    ],
+    bio : {
+        type : String,
+    },
+    profilePicture : {
+        type : String,
+    //    required : true,
+    },
+    coverPhoto : {
+        type : String,
+    },
+    phone : {
+        type : String,
+    },
+    birthData : {
+        type : String,
+    },
+    gender : {
+        type : String,
+    },
+    location : {
+        type : String,
+    },
+    interests : [{
+        type : String,
+    }],
+    followers : [{
+        type : Schema.Types.ObjectId,
+        ref : 'User'
+    }],
+    following : [{
+        type : Schema.Types.ObjectId,
+        ref : 'User'
+    }],
+    posts : [{
+        type : Schema.Types.ObjectId,
+        ref : 'Post'
+    }],
+    story : [{
+        type : Schema.Types.ObjectId,
+        ref : 'Story'
+    }],
     refreshToken : {
         type : String,
     },
-},{
-    timestamps : true
+    createdAt : {
+        type : Date,
+        default : Date.now
+    },
+    updatedAt : {
+        type : Date,
+        default : Date.now
+    }
 })
 
 
-userSchema.pre("save", async function(next){
-    if(!this.isModified("password"))
-        return next();
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
 
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-})
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
-userSchema.methods.isPasswordCorrect = async function(password){
-    return await bcrypt.compare(password, this.password);
-}
+// Define the instance method to compare passwords
+userSchema.methods.isPasswordCorrect = async function(password) {
+    try {
+        return await bcrypt.compare(password, this.password);
+    } catch (error) {
+        console.error("Error comparing password", error);
+        return false;
+    }
+};
+
 
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign({
@@ -74,7 +119,7 @@ userSchema.methods.generateAccessToken = function(){
     })
 }
 
-userSchema.methods.generateAccessToken = function(){
+userSchema.methods.generateRefreshToken = function(){
     return jwt.sign({
         _id : this._id,
     },
