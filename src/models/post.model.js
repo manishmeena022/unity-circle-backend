@@ -14,11 +14,11 @@ const postSchema = new Schema({
         type : String,
         required : true,
     },
-    image : {
+    images : {
         type : String,
         //required : true,
     },
-    video : {
+    videos : {
         type : String,
         //required : true,
     },

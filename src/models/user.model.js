@@ -9,7 +9,7 @@ const userSchema = new Schema({
     username : {
         type : String,
         required : true,
-        unqiue : true,
+        unique : true,
         lowercase : true,
         trim : true,
     },
@@ -22,7 +22,7 @@ const userSchema = new Schema({
         type : String,
         required : true,
         unique : true,
-        // match : /^\S+@\S+\. \S+$/,
+        match: /^\S+@\S+\.\S+$/,
     },
     password : {
         type : String,
@@ -41,7 +41,7 @@ const userSchema = new Schema({
     phone : {
         type : String,
     },
-    birthData : {
+    birthDate : {
         type : String,
     },
     gender : {
